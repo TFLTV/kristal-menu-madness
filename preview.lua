@@ -185,6 +185,8 @@ function preview:init(mod, button, menu)
         Kristal.Menu_madness.enter_explode = true
     elseif Utils.random() < 1/25 then
         button.subtitle = "Dark Place: Menu Edition"
+    elseif Utils.random() < 1/15 then
+        button.subtitle = "The Menu Has the Madness"
     else
         button.subtitle = "Dark Place? I think not."
     end
@@ -241,7 +243,7 @@ end
 
 function preview:updatename()
 
-    local name = "Menu Madness Menu Madness " -- despite be commited by TFLTV this code was made by SadDiamondMan. they made the code, not me.
+    local name = "Menu Madness Menu Madness " -- despite being commited by TFLTV this code was made by SadDiamondMan. they made the code, not me.
     local name_length = #name
     
 
