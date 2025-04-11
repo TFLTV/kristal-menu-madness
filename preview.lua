@@ -28,13 +28,26 @@ local function getFrames(name, frames, path, return_images)
 end
 
 function preview:init(mod, button, menu)
-
     preview.button = button
     preview.mod_path = mod.path
     
     mod_path = mod.path
     sprite_path = mod.path .. "/assets/sprites"
-
+    self.splash_list = {
+        "human i remember\nyou're genocides",
+        "Lets go to the librarby!",
+        "THE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER\nTHE END IS NEVER", -- stanley parable reference
+        "Error: Splash not found",
+        "Bees",
+        "Open source!",
+        "Button",
+        "human i... forgor.",
+        "With one more player!",
+        "Deltarune, just 5 hours away!",
+        "May include dogs."
+    }
+    self.splash = Utils.pick(self.splash_list)
+    self.splash_timer = 0
     --print(Utils.dump(Kristal.Mods.getMods()))
     --MainMenu.mod_list.list:addMod({hidden = false, name = "The Button", subtitle = "subtitle"})
     if MainMenu and not Kristal.Menu_madness then -- Should i even capitalize the name of the variable
@@ -202,6 +215,7 @@ function preview:update()
     preview:updatename()
 
     if MainMenu then
+        self.splash_timer = self.splash_timer + DT*0.5
 
         if MainMenu.state == "MODSELECT" then
             preview:buttonUpdate()
@@ -237,6 +251,9 @@ local subfont = Assets.getFont("main", 16)
 function preview:drawOverlay()
     if MainMenu and MainMenu.state == "MODSELECT" then
 
+    end
+    if MainMenu and (MainMenu.state == "TITLE") then
+        self:drawSplashText()
     end
 end
 
@@ -330,6 +347,37 @@ function preview:buttonUpdate()
             end
         end
     end
+end
+
+
+function preview:drawSplashText()
+    love.graphics.setColor({1, 1, 1}, 1)
+    local font = Assets.getFont("main")
+    love.graphics.setFont(font)
+    local scale = 1 + math.sin(self.splash_timer) / 10
+    local splash_angle, splash_x, splash_y
+    if MainMenu.state == "TITLE" then
+        splash_angle = math.rad(-16)
+        splash_x, splash_y = SCREEN_WIDTH/2+100, 105+40
+    else
+        splash_angle = math.rad(16)
+        splash_x, splash_y = SCREEN_WIDTH-115, 40
+        --splash_x, splash_y = SCREEN_WIDTH-120, 32
+    end
+    if DEBUG_RENDER then
+        love.graphics.setColor(0.9, 0, 0.75, 1)
+        love.graphics.rectangle("fill", splash_x, splash_y-5, 2, font:getHeight()+10)
+        love.graphics.push()
+        love.graphics.translate(splash_x, splash_y)
+        love.graphics.rotate(splash_angle)
+        love.graphics.setColor(0.5, 0.1, 0.5, 1)
+        love.graphics.rectangle("fill", -2, 0, 2, font:getHeight()*scale)
+        love.graphics.setColor(0.1, 0.5, 0.5, 0.5)
+        love.graphics.rectangle("fill", -font:getWidth(self.splash)/2*scale, 0, font:getWidth(self.splash)*scale, font:getHeight()*scale)
+        love.graphics.pop()
+    end
+    love.graphics.setColor({0.7, 0.7, 0.7}, 1)
+    love.graphics.print(self.splash, splash_x, splash_y, splash_angle, scale, scale, font:getWidth(self.splash)/2, 0)
 end
 
 return preview
